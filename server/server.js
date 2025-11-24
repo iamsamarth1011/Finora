@@ -16,7 +16,7 @@ import userRoutes from './routes/userRoutes.js';
 connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // CORS Configuration - Allow all origins (open CORS)
 app.use(cors());
