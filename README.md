@@ -123,5 +123,5 @@ ISC
 
 ## 👥 Contributors
 
-Add your name here
+Samarth Chaudhary 
 
