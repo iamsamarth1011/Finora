@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTransactions } from '../context/TransactionContext';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
@@ -23,6 +23,9 @@ const Transactions = () => {
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
+  const prevFiltersRef = useRef(JSON.stringify(filters));
+  const prevPageRef = useRef(pagination.page);
+  const hasMountedRef = useRef(false);
 
   const categories = [
     'Food',
@@ -37,8 +40,28 @@ const Transactions = () => {
   ];
 
   useEffect(() => {
-    // Explicitly set limit to 10 for transactions page
-    fetchTransactions({ limit: 10 });
+    const filtersChanged = prevFiltersRef.current !== JSON.stringify(filters);
+    const pageChanged = prevPageRef.current !== pagination.page;
+    
+    // On first mount: only fetch if transactions are empty
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      prevFiltersRef.current = JSON.stringify(filters);
+      prevPageRef.current = pagination.page;
+      
+      if (transactions.length === 0) {
+        fetchTransactions({ limit: 10 });
+      }
+      return;
+    }
+
+    // After first mount: only fetch if filters or page actually changed
+    if (filtersChanged || pageChanged) {
+      prevFiltersRef.current = JSON.stringify(filters);
+      prevPageRef.current = pagination.page;
+      fetchTransactions({ limit: 10 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, pagination.page]);
 
   const handleFilterChange = (key, value) => {
@@ -132,7 +155,7 @@ const Transactions = () => {
                 type="date"
                 value={filters.startDate}
                 onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
             <div>
@@ -143,7 +166,7 @@ const Transactions = () => {
                 type="date"
                 value={filters.endDate}
                 onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
             <div>
@@ -153,7 +176,7 @@ const Transactions = () => {
               <select
                 value={filters.category}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">All Categories</option>
                 {categories.map((cat) => (
@@ -170,7 +193,7 @@ const Transactions = () => {
               <select
                 value={filters.type}
                 onChange={(e) => handleFilterChange('type', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">All Types</option>
                 <option value="income">Income</option>
@@ -186,7 +209,7 @@ const Transactions = () => {
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
                 placeholder="Search description..."
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
           </div>
@@ -201,7 +224,7 @@ const Transactions = () => {
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-white"></div>
             </div>
           ) : (
             <>
@@ -246,7 +269,7 @@ const Transactions = () => {
                             {transaction.description || '-'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300">
+                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-gray-800 text-blue-800 dark:text-white">
                               {transaction.category}
                             </span>
                           </td>
@@ -271,7 +294,7 @@ const Transactions = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button
                               onClick={() => handleEdit(transaction)}
-                              className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-4 transition-colors"
+                              className="text-blue-600 dark:text-white hover:text-blue-900 dark:hover:text-gray-300 mr-4 transition-colors"
                             >
                               Edit
                             </button>

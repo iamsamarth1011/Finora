@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useTransactions } from '../context/TransactionContext';
-import api from '../services/api';
 import Button from '../components/Button';
 import Layout from '../components/Layout';
 import Modal from '../components/Modal';
@@ -19,88 +18,93 @@ const Dashboard = () => {
   const [categoryData, setCategoryData] = useState([]);
   const [trendData, setTrendData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const hasLoadedRef = useRef(false);
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
+  // Calculate dashboard data from transactions
+  const calculateDashboardData = (trans) => {
+    // Calculate statistics
+    const income = trans
+      .filter((t) => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0);
+    const expenses = trans
+      .filter((t) => t.type === 'expense')
+      .reduce((sum, t) => sum + t.amount, 0);
 
-  const loadDashboardData = async () => {
-    try {
-      // Fetch recent transactions
-      const response = await fetchTransactions({ limit: 100 });
-      
-      if (response.success) {
-        const trans = response.data.transactions;
-        
-        // Calculate statistics
-        const income = trans
-          .filter((t) => t.type === 'income')
-          .reduce((sum, t) => sum + t.amount, 0);
-        const expenses = trans
-          .filter((t) => t.type === 'expense')
-          .reduce((sum, t) => sum + t.amount, 0);
+    setStats({
+      totalIncome: income,
+      totalExpenses: expenses,
+      balance: income - expenses,
+    });
 
-        setStats({
-          totalIncome: income,
-          totalExpenses: expenses,
-          balance: income - expenses,
-        });
+    // Category breakdown for expenses
+    const categoryMap = {};
+    trans
+      .filter((t) => t.type === 'expense')
+      .forEach((t) => {
+        categoryMap[t.category] = (categoryMap[t.category] || 0) + t.amount;
+      });
 
-        // Category breakdown for expenses
-        const categoryMap = {};
-        trans
-          .filter((t) => t.type === 'expense')
-          .forEach((t) => {
-            categoryMap[t.category] = (categoryMap[t.category] || 0) + t.amount;
-          });
+    const categoryChartData = Object.entries(categoryMap).map(([name, value]) => ({
+      name,
+      value: parseFloat(value.toFixed(2)),
+    }));
 
-        const categoryChartData = Object.entries(categoryMap).map(([name, value]) => ({
-          name,
-          value: parseFloat(value.toFixed(2)),
-        }));
+    setCategoryData(categoryChartData);
 
-        setCategoryData(categoryChartData);
-
-        // Trend data (last 7 days)
-        const today = new Date();
-        const trendMap = {};
-        
-        for (let i = 6; i >= 0; i--) {
-          const date = new Date(today);
-          date.setDate(date.getDate() - i);
-          const dateStr = format(date, 'MMM dd');
-          trendMap[dateStr] = { income: 0, expenses: 0 };
-        }
-
-        trans.forEach((t) => {
-          const date = new Date(t.date);
-          const dateStr = format(date, 'MMM dd');
-          if (trendMap[dateStr]) {
-            if (t.type === 'income') {
-              trendMap[dateStr].income += t.amount;
-            } else {
-              trendMap[dateStr].expenses += t.amount;
-            }
-          }
-        });
-
-        const trendChartData = Object.entries(trendMap).map(([date, values]) => ({
-          date,
-          income: parseFloat(values.income.toFixed(2)),
-          expenses: parseFloat(values.expenses.toFixed(2)),
-        }));
-
-        setTrendData(trendChartData);
-      }
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
+    // Trend data (last 7 days)
+    const today = new Date();
+    const trendMap = {};
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = format(date, 'MMM dd');
+      trendMap[dateStr] = { income: 0, expenses: 0 };
     }
+
+    trans.forEach((t) => {
+      const date = new Date(t.date);
+      const dateStr = format(date, 'MMM dd');
+      if (trendMap[dateStr]) {
+        if (t.type === 'income') {
+          trendMap[dateStr].income += t.amount;
+        } else {
+          trendMap[dateStr].expenses += t.amount;
+        }
+      }
+    });
+
+    const trendChartData = Object.entries(trendMap).map(([date, values]) => ({
+      date,
+      income: parseFloat(values.income.toFixed(2)),
+      expenses: parseFloat(values.expenses.toFixed(2)),
+    }));
+
+    setTrendData(trendChartData);
   };
 
+  // Load data only on initial mount if transactions are empty
+  useEffect(() => {
+    if (!hasLoadedRef.current && transactions.length === 0) {
+      hasLoadedRef.current = true;
+      fetchTransactions({ limit: 100 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Recalculate dashboard data when transactions change
+  useEffect(() => {
+    if (transactions.length > 0) {
+      calculateDashboardData(transactions);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactions]);
+
   const handleTransactionSuccess = () => {
-    loadDashboardData();
+    // Refresh transactions from context, which will trigger recalculation
+    fetchTransactions({ limit: 100 });
   };
 
   const recentTransactions = transactions.slice(0, 5);
@@ -155,23 +159,23 @@ const Dashboard = () => {
           
           <div className={`bg-gradient-to-br rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border animate-slide-up ${
             stats.balance >= 0 
-              ? 'from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-100 dark:border-blue-800/50' 
+              ? 'from-blue-50 to-cyan-50 dark:from-gray-900/30 dark:to-black/30 border-blue-100 dark:border-gray-700' 
               : 'from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-100 dark:border-orange-800/50'
           }`} style={{ animationDelay: '0.2s' }}>
             <div className="flex items-center justify-between mb-4">
               <div className={`text-sm font-semibold uppercase tracking-wide ${
                 stats.balance >= 0 
-                  ? 'text-blue-700 dark:text-blue-400' 
+                  ? 'text-blue-700 dark:text-white' 
                   : 'text-orange-700 dark:text-orange-400'
               }`}>Balance</div>
               <div className={`p-2 rounded-lg ${
                 stats.balance >= 0 
-                  ? 'bg-blue-100 dark:bg-blue-900/50' 
+                  ? 'bg-blue-100 dark:bg-gray-800' 
                   : 'bg-orange-100 dark:bg-orange-900/50'
               }`}>
                 <svg className={`w-5 h-5 ${
                   stats.balance >= 0 
-                    ? 'text-blue-600 dark:text-blue-400' 
+                    ? 'text-blue-600 dark:text-white' 
                     : 'text-orange-600 dark:text-orange-400'
                 }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -180,7 +184,7 @@ const Dashboard = () => {
             </div>
             <div className={`text-3xl font-bold ${
               stats.balance >= 0 
-                ? 'text-blue-700 dark:text-blue-400' 
+                ? 'text-blue-700 dark:text-white' 
                 : 'text-orange-700 dark:text-orange-400'
             }`}>
               ₹{stats.balance.toFixed(2)}
@@ -193,7 +197,7 @@ const Dashboard = () => {
           {/* Category Pie Chart */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white flex items-center">
-              <svg className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 mr-2 text-blue-600 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H11V2.512A9.025 9.025 0 0120.488 9z" />
               </svg>
@@ -263,7 +267,7 @@ const Dashboard = () => {
               </svg>
               Recent Transactions
             </h2>
-            <Link to="/transactions" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium flex items-center transition-colors">
+            <Link to="/transactions" className="text-blue-600 dark:text-white hover:text-blue-700 dark:hover:text-gray-300 text-sm font-medium flex items-center transition-colors">
               View all
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -299,7 +303,7 @@ const Dashboard = () => {
                         {transaction.description || '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300">
+                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-gray-800 text-blue-800 dark:text-white">
                           {transaction.category}
                         </span>
                       </td>

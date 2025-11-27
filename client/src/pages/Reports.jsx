@@ -59,7 +59,7 @@ const Reports = () => {
 
         {/* Report Generator */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold mb-4">Generate Monthly Report</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Generate Monthly Report</h2>
           <div className="flex flex-wrap gap-4 items-end">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -68,7 +68,7 @@ const Reports = () => {
               <select
                 value={month}
                 onChange={(e) => setMonth(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 {months.map((m, i) => (
                   <option key={i} value={i + 1}>
@@ -84,7 +84,7 @@ const Reports = () => {
               <select
                 value={year}
                 onChange={(e) => setYear(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 {years.map((y) => (
                   <option key={y} value={y}>
@@ -107,7 +107,7 @@ const Reports = () => {
         {/* Report Display */}
         {loading && (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center border border-gray-200 dark:border-gray-700">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-white mx-auto"></div>
             <p className="mt-4 text-gray-600 dark:text-gray-400">AI is analyzing your financial data...</p>
           </div>
         )}
@@ -137,7 +137,7 @@ const Reports = () => {
                   ₹{report.summary?.totalExpenses?.toFixed(2) || '0.00'}
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-lg p-4 border border-blue-100 dark:border-blue-800/50">
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-900/30 dark:to-black/30 rounded-lg p-4 border border-blue-100 dark:border-gray-700">
                 <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Balance</div>
                 <div className={`text-2xl font-bold ${(report.summary?.balance || 0) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                   ₹{report.summary?.balance?.toFixed(2) || '0.00'}
@@ -157,7 +157,7 @@ const Reports = () => {
               <div className="flex items-center space-x-4">
                 <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-4">
                   <div
-                    className="bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-500 dark:to-blue-400 h-4 rounded-full transition-all"
+                    className="bg-gradient-to-r from-blue-600 to-blue-500 dark:from-black dark:to-gray-900 h-4 rounded-full transition-all"
                     style={{ width: `${report.financialHealthScore || 0}%` }}
                   ></div>
                 </div>
@@ -197,7 +197,7 @@ const Reports = () => {
                 <ul className="space-y-2">
                   {report.recommendations.map((rec, index) => (
                     <li key={index} className="flex items-start">
-                      <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
+                      <span className="text-blue-600 dark:text-white mr-2">•</span>
                       <span className="text-gray-700 dark:text-gray-300">{rec}</span>
                     </li>
                   ))}

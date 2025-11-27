@@ -1,13 +1,15 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import Button from './Button';
 import Footer from './Footer';
+import whiteLogo from '../utils/white_logo.png';
+import darkLogo from '../utils/dark_logo.png';
+import da from 'date-fns/locale/da';
 
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogout = () => {
@@ -23,17 +25,22 @@ const Layout = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <Link to="/dashboard" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent hover:scale-105 transition-transform duration-200">
+              <Link to="/dashboard" className="flex-shrink-0 flex items-center space-x-2 group">
+                <span className="text-2xl font-bold text-black dark:text-white text-transparent hover:scale-105 transition-transform duration-200">
                   Finora
-                </Link>
-              </div>
+                </span>
+                <img 
+                  src={theme === 'dark' ? darkLogo : whiteLogo} 
+                  alt="Finora" 
+                  className="w-8 h-8 object-contain group-hover:scale-110 transition-transform duration-200"
+                />
+              </Link>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 <Link
                   to="/dashboard"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
                     isActive('/dashboard')
-                      ? 'border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
+                      ? 'border-blue-500 dark:border-gray-700 text-blue-600 dark:text-white'
                       : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
@@ -43,7 +50,7 @@ const Layout = ({ children }) => {
                   to="/transactions"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
                     isActive('/transactions')
-                      ? 'border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
+                      ? 'border-blue-500 dark:border-gray-700 text-blue-600 dark:text-white'
                       : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
@@ -53,7 +60,7 @@ const Layout = ({ children }) => {
                   to="/reports"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
                     isActive('/reports')
-                      ? 'border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
+                      ? 'border-blue-500 dark:border-gray-700 text-blue-600 dark:text-white'
                       : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
@@ -63,7 +70,7 @@ const Layout = ({ children }) => {
                   to="/profile"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
                     isActive('/profile')
-                      ? 'border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
+                      ? 'border-blue-500 dark:border-gray-700 text-blue-600 dark:text-white'
                       : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
@@ -77,7 +84,7 @@ const Layout = ({ children }) => {
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600"
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? (
