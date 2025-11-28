@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { useTransactions } from '../context/TransactionContext';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
@@ -40,6 +40,16 @@ const Transactions = () => {
   ];
 
   useEffect(() => {
+    setPagination((prev) => {
+      if (prev.limit === 10) {
+        return prev;
+      }
+      return { ...prev, limit: 10, page: 1 };
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     const filtersChanged = prevFiltersRef.current !== JSON.stringify(filters);
     const pageChanged = prevPageRef.current !== pagination.page;
     
@@ -63,6 +73,36 @@ const Transactions = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, pagination.page]);
+
+  const handlePageChange = (newPage) => {
+    if (!pagination.pages) return;
+    if (newPage < 1 || newPage > pagination.pages || newPage === pagination.page) {
+      return;
+    }
+    setPagination((prev) => ({ ...prev, page: newPage }));
+  };
+
+  const pageButtons = useMemo(() => {
+    const totalPages = pagination.pages || 1;
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, idx) => idx + 1);
+    }
+
+    const pages = new Set([1, totalPages, pagination.page]);
+    if (pagination.page > 1) pages.add(pagination.page - 1);
+    if (pagination.page < totalPages) pages.add(pagination.page + 1);
+
+    const sorted = Array.from(pages).sort((a, b) => a - b);
+    const result = [];
+
+    for (let i = 0; i < sorted.length; i += 1) {
+      result.push(sorted[i]);
+      if (sorted[i + 1] && sorted[i + 1] - sorted[i] > 1) {
+        result.push('ellipsis-' + i);
+      }
+    }
+    return result;
+  }, [pagination.page, pagination.pages]);
 
   const handleFilterChange = (key, value) => {
     updateFilters({ [key]: value });
@@ -329,14 +369,14 @@ const Transactions = () => {
                   <div className="flex-1 flex justify-between sm:hidden">
                     <Button
                       variant="secondary"
-                      onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
+                      onClick={() => handlePageChange(pagination.page - 1)}
                       disabled={pagination.page === 1}
                     >
                       Previous
                     </Button>
                     <Button
                       variant="secondary"
-                      onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
+                      onClick={() => handlePageChange(pagination.page + 1)}
                       disabled={pagination.page === pagination.pages}
                     >
                       Next
@@ -356,18 +396,39 @@ const Transactions = () => {
                       <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                         <Button
                           variant="secondary"
-                          onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
+                          onClick={() => handlePageChange(pagination.page - 1)}
                           disabled={pagination.page === 1}
                           className="rounded-l-md"
                         >
                           Previous
                         </Button>
-                        <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <div className="hidden md:flex items-center space-x-1 px-3">
+                          {pageButtons.map((value) =>
+                            typeof value === 'string' ? (
+                              <span key={value} className="text-gray-500 dark:text-gray-400 px-2">
+                                ...
+                              </span>
+                            ) : (
+                              <button
+                                key={value}
+                                onClick={() => handlePageChange(value)}
+                                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                                  pagination.page === value
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                }`}
+                              >
+                                {value}
+                              </button>
+                            )
+                          )}
+                        </div>
+                        <span className="md:hidden relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300">
                           Page {pagination.page} of {pagination.pages}
                         </span>
                         <Button
                           variant="secondary"
-                          onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
+                          onClick={() => handlePageChange(pagination.page + 1)}
                           disabled={pagination.page === pagination.pages}
                           className="rounded-r-md"
                         >

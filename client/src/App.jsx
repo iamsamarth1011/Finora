@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
 import { TransactionProvider } from './context/TransactionContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
@@ -14,10 +13,9 @@ import Premium from './pages/Premium';
 function App() {
   return (
     <Router>
-      <ThemeProvider>
-        <AuthProvider>
-          <TransactionProvider>
-            <Routes>
+      <AuthProvider>
+        <TransactionProvider>
+          <Routes>
               {/* Public Routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
@@ -66,10 +64,9 @@ function App() {
               
               {/* Default redirect */}
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </TransactionProvider>
-        </AuthProvider>
-      </ThemeProvider>
+          </Routes>
+        </TransactionProvider>
+      </AuthProvider>
     </Router>
   );
 }
