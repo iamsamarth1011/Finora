@@ -72,7 +72,7 @@ const Profile = () => {
           <p className="text-gray-600 dark:text-gray-400">Manage your account settings and preferences</p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-neutral-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 border border-gray-200 dark:border-gray-700">
           {error && (
             <div className="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg">
               {error}
@@ -116,8 +116,9 @@ const Profile = () => {
                   />
                   <Button
                     type="button"
-                    variant="secondary"
+                    variant="primary"
                     onClick={() => fileInputRef.current?.click()}
+                    className='bg-neutral-700 border-white-500'
                   >
                     Change Photo
                   </Button>
@@ -137,7 +138,7 @@ const Profile = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-neutral-700 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -153,7 +154,7 @@ const Profile = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-neutral-700 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -162,35 +163,19 @@ const Profile = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Subscription Plan
               </label>
-              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-600">
+              <div className="flex items-center justify-between p-4 bg-neutral-700 rounded-md border border-gray-200 dark:border-gray-600">
                 <div>
                   <span className="text-lg font-semibold capitalize text-gray-900 dark:text-white">{user?.subscriptionPlan || 'Free'}</span>
                   <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
                     ({user?.subscriptionStatus || 'active'})
                   </span>
                 </div>
-                {user?.subscriptionPlan === 'free' ? (
-                  <Button
-                    type="button"
-                    onClick={() => window.location.href = '/premium'}
-                  >
-                    Upgrade to Premium
-                  </Button>
-                ) : (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => window.location.href = '/premium'}
-                  >
-                    Manage Subscription
-                  </Button>
-                )}
               </div>
             </div>
 
             {/* Submit Button */}
             <div className="pt-4">
-              <Button type="submit" disabled={loading} className="w-full">
+              <Button type="submit" disabled={loading} className="w-full bg-neutral-700 border-white-500">
                 {loading ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>

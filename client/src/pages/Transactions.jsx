@@ -176,8 +176,8 @@ const Transactions = () => {
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and track all your financial transactions</p>
           </div>
-          <Button onClick={handleAdd} className="shadow-lg hover:shadow-xl">
-            <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <Button onClick={handleAdd} className="shadow-lg hover:shadow-xl bg-neutral-700 border-white-500">
+            <svg className="w-5 h-5 inline mr-2 bg-neutral-700 border-white-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             Add Transaction
@@ -185,7 +185,7 @@ const Transactions = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-neutral-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -195,7 +195,7 @@ const Transactions = () => {
                 type="date"
                 value={filters.startDate}
                 onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="bg-neutral-800 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-neutral-800 text-gray-900 dark:text-white"
               />
             </div>
             <div>
@@ -206,7 +206,7 @@ const Transactions = () => {
                 type="date"
                 value={filters.endDate}
                 onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-neutral-800 text-gray-900 dark:text-white"
               />
             </div>
             <div>
@@ -216,7 +216,7 @@ const Transactions = () => {
               <select
                 value={filters.category}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-neutral-800 text-gray-900 dark:text-white"
               >
                 <option value="">All Categories</option>
                 {categories.map((cat) => (
@@ -233,7 +233,7 @@ const Transactions = () => {
               <select
                 value={filters.type}
                 onChange={(e) => handleFilterChange('type', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-neutral-800 text-gray-900 dark:text-white"
               >
                 <option value="">All Types</option>
                 <option value="income">Income</option>
@@ -249,19 +249,19 @@ const Transactions = () => {
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
                 placeholder="Search description..."
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-neutral-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
           </div>
-          <div className="mt-4">
-            <Button variant="secondary" onClick={resetFilters}>
+          <div className="mt-4 ">
+            <Button variant="primary" onClick={resetFilters} className='bg-neutral-700 border-white-500'>
               Clear Filters
             </Button>
           </div>
         </div>
 
         {/* Transactions Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+        <div className="bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-white"></div>
@@ -270,7 +270,7 @@ const Transactions = () => {
             <>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-50 dark:bg-gray-700/50">
+                  <thead className="bg-neutral-700">
                     <tr>
                       <th
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -298,7 +298,7 @@ const Transactions = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <tbody className="bg-neutral-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedTransactions.length > 0 ? (
                       sortedTransactions.map((transaction) => (
                         <tr key={transaction._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
@@ -309,7 +309,7 @@ const Transactions = () => {
                             {transaction.description || '-'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-gray-800 text-blue-800 dark:text-white">
+                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-neutral-700 text-blue-800 dark:text-white">
                               {transaction.category}
                             </span>
                           </td>
@@ -365,7 +365,7 @@ const Transactions = () => {
 
               {/* Pagination */}
               {pagination.pages > 1 && (
-                <div className="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
+                <div className="bg-neutral-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
                   <div className="flex-1 flex justify-between sm:hidden">
                     <Button
                       variant="secondary"
@@ -382,10 +382,10 @@ const Transactions = () => {
                       Next
                     </Button>
                   </div>
-                  <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                  <div className="bg-neutral-800 hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300">
-                        Showing <span className="font-medium">{((pagination.page - 1) * pagination.limit) + 1}</span> to{' '}
+                      <p className="bg-neutral-800 text-sm text-gray-700 dark:text-gray-300">
+                        Showing <span className="bg-neutral-800 font-medium">{((pagination.page - 1) * pagination.limit) + 1}</span> to{' '}
                         <span className="font-medium">
                           {Math.min(pagination.page * pagination.limit, pagination.total)}
                         </span>{' '}
@@ -395,10 +395,10 @@ const Transactions = () => {
                     <div>
                       <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                         <Button
-                          variant="secondary"
+                          variant="primary"
                           onClick={() => handlePageChange(pagination.page - 1)}
                           disabled={pagination.page === 1}
-                          className="rounded-l-md"
+                          className="rounded-l-md bg-neutral-700"
                         >
                           Previous
                         </Button>
@@ -414,8 +414,8 @@ const Transactions = () => {
                                 onClick={() => handlePageChange(value)}
                                 className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
                                   pagination.page === value
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                    ? 'bg-neutral-600 text-white'
+                                    : 'bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                                 }`}
                               >
                                 {value}
@@ -423,14 +423,14 @@ const Transactions = () => {
                             )
                           )}
                         </div>
-                        <span className="md:hidden relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span className="md:hidden relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600  text-sm font-medium text-gray-700 dark:text-gray-300">
                           Page {pagination.page} of {pagination.pages}
                         </span>
                         <Button
-                          variant="secondary"
+                          variant="primary"
                           onClick={() => handlePageChange(pagination.page + 1)}
                           disabled={pagination.page === pagination.pages}
-                          className="rounded-r-md"
+                          className="rounded-r-md bg-neutral-700"
                         >
                           Next
                         </Button>

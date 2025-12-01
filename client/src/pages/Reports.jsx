@@ -58,7 +58,7 @@ const Reports = () => {
         </div>
 
         {/* Report Generator */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-neutral-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Generate Monthly Report</h2>
           <div className="flex flex-wrap gap-4 items-end">
             <div>
@@ -68,7 +68,7 @@ const Reports = () => {
               <select
                 value={month}
                 onChange={(e) => setMonth(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-neutral-800 text-gray-900 dark:text-white"
               >
                 {months.map((m, i) => (
                   <option key={i} value={i + 1}>
@@ -84,7 +84,7 @@ const Reports = () => {
               <select
                 value={year}
                 onChange={(e) => setYear(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-gray-600 focus:border-blue-500 dark:focus:border-gray-600 bg-neutral-800 text-gray-900 dark:text-white"
               >
                 {years.map((y) => (
                   <option key={y} value={y}>
@@ -93,7 +93,7 @@ const Reports = () => {
                 ))}
               </select>
             </div>
-            <Button onClick={handleGenerateReport} disabled={loading}>
+            <Button variant="primary" className = 'bg-neutral-700 border-white-500' onClick={handleGenerateReport} disabled={loading}>
               {loading ? 'Generating...' : 'Generate Report'}
             </Button>
           </div>

@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Button from './Button';
 import Footer from './Footer';
-import whiteLogo from '../utils/white_logo.png';
+import blackLogo from '../utils/dark_logo.png';
 
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
@@ -15,15 +15,15 @@ const Layout = ({ children }) => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-900 text-white transition-colors duration-300 flex flex-col">
+    <div className="min-h-screen bg-neutral-900 from-gray-950 via-gray-900 to-gray-900 text-white transition-colors duration-300 flex flex-col">
       {/* Navigation */}
-      <nav className="bg-gray-900/90 backdrop-blur-lg shadow-lg border-b border-gray-800 sticky top-0 z-50 transition-colors duration-300">
+      <nav className="bg-neutral-900 backdrop-blur-lg shadow-lg border-b border-gray-800 sticky top-0 z-50 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
               <Link to="/dashboard" className="flex-shrink-0 flex items-center space-x-3 group">
                 <img 
-                  src={whiteLogo} 
+                  src={blackLogo} 
                   alt="Finora" 
                   className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-200 drop-shadow-lg"
                 />
