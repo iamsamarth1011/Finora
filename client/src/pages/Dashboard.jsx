@@ -128,7 +128,7 @@ const Dashboard = () => {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-green-100 dark:border-green-800/50 animate-slide-up">
+          <div className=" dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-green-100 dark:border-green-800/50 animate-slide-up">
             <div className="flex items-center justify-between mb-4">
               <div className="text-sm font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">Total Income</div>
               <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
@@ -142,7 +142,7 @@ const Dashboard = () => {
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-red-100 dark:border-red-800/50 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <div className="dark:from-red-900/20 dark:to-rose-900/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-red-100 dark:border-red-800/50 animate-slide-up" style={{ animationDelay: '0.1s' }}>
             <div className="flex items-center justify-between mb-4">
               <div className="text-sm font-semibold text-red-700 dark:text-red-400 uppercase tracking-wide">Total Expenses</div>
               <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg">
@@ -156,7 +156,7 @@ const Dashboard = () => {
             </div>
           </div>
           
-          <div className={`bg-gradient-to-br rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border animate-slide-up ${
+          <div className={`rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border animate-slide-up ${
             stats.balance >= 0 
               ? 'from-blue-50 to-cyan-50 dark:from-gray-900/30 dark:to-black/30 border-blue-100 dark:border-gray-700' 
               : 'from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-100 dark:border-orange-800/50'

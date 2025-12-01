@@ -144,11 +144,6 @@ const Footer = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               © {currentYear} Finora. All rights reserved.
             </p>
-            <div className="mt-4 md:mt-0 flex items-center space-x-6">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                Made with <span className="text-red-500">♥</span> for better financial management
-              </span>
-            </div>
           </div>
         </div>
       </div>

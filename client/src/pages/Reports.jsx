@@ -106,14 +106,14 @@ const Reports = () => {
 
         {/* Report Display */}
         {loading && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center border border-gray-200 dark:border-gray-700">
+          <div className="bg-neutral-800 rounded-xl shadow-lg p-12 text-center border border-gray-200 dark:border-gray-700">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-white mx-auto"></div>
             <p className="mt-4 text-gray-600 dark:text-gray-400">AI is analyzing your financial data...</p>
           </div>
         )}
 
         {report && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-6 border border-gray-200 dark:border-gray-700 animate-fade-in">
+          <div className="bg-neutral-800 rounded-xl shadow-lg p-6 space-y-6 border border-gray-200 dark:border-gray-700 animate-fade-in">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {months[month - 1]} {year} Financial Report
@@ -155,9 +155,9 @@ const Reports = () => {
             <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
               <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Financial Health Score</h3>
               <div className="flex items-center space-x-4">
-                <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+                <div className="flex-1 bg-neutral-900 rounded-full h-4">
                   <div
-                    className="bg-gradient-to-r from-blue-600 to-blue-500 dark:from-black dark:to-gray-900 h-4 rounded-full transition-all"
+                    className="bg-neutral-600 dark:from-black dark:to-gray-900 h-4 rounded-full transition-all"
                     style={{ width: `${report.financialHealthScore || 0}%` }}
                   ></div>
                 </div>
@@ -173,7 +173,7 @@ const Reports = () => {
                 <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Top Spending Categories</h3>
                 <div className="space-y-2">
                   {report.topSpendingCategories.map((item, index) => (
-                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                    <div key={index} className="flex justify-between items-center p-3 bg-neutral-700 rounded-lg border border-gray-200 dark:border-gray-600">
                       <span className="font-medium text-gray-900 dark:text-white">{item.category}</span>
                       <span className="text-red-600 dark:text-red-400 font-semibold">₹{item.amount?.toFixed(2)}</span>
                     </div>
