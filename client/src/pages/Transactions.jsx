@@ -270,7 +270,7 @@ const Transactions = () => {
             <>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-neutral-700">
+                  <thead className="bg-neutral-700 dark:bg-neutral-700">
                     <tr>
                       <th
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -309,7 +309,7 @@ const Transactions = () => {
                             {transaction.description || '-'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-neutral-700 text-blue-800 dark:text-white">
+                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-neutral-800 dark:bg-neutral-700 text-blue-800 dark:text-white">
                               {transaction.category}
                             </span>
                           </td>
@@ -318,7 +318,7 @@ const Transactions = () => {
                               className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                 transaction.type === 'income'
                                   ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300'
-                                  : 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300'
+                                  : 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200'
                               }`}
                             >
                               {transaction.type}

@@ -109,7 +109,7 @@ const Dashboard = () => {
   const recentTransactions = transactions.slice(0, 5);
 
   return (
-    <Layout>
+    <Layout className="bg-neutral-700">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8 animate-slide-up">
           <div>

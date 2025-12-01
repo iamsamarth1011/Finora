@@ -79,7 +79,7 @@ const Signup = () => {
           )}
           <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-400">
                 Name
               </label>
               <input
@@ -94,7 +94,7 @@ const Signup = () => {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-400">
                 Email address
               </label>
               <input
@@ -110,7 +110,7 @@ const Signup = () => {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-400">
                 Password
               </label>
               <input
@@ -126,7 +126,7 @@ const Signup = () => {
               />
             </div>
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-400">
                 Confirm Password
               </label>
               <input
@@ -146,7 +146,7 @@ const Signup = () => {
           <div>
             <Button
               type="submit"
-              className="w-full bg-neutral-900 border-white-500"
+              className="w-full bg-neutral-900 border-white-500 text-gray-400"
               variant='primary'
               disabled={loading}
             >
