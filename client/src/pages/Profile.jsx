@@ -64,7 +64,7 @@ const Profile = () => {
 
   return (
     <Layout>
-      <div className="px-4 sm:px-6 lg:px-8 max-w-2xl">
+      <div className="px-4 sm:px-6 lg:px-8 max-w-4xl">
         <div className="mb-8 animate-slide-up">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
             Profile Settings

@@ -117,22 +117,22 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-neutral-700">
+    <form onSubmit={handleSubmit} className="space-y-4 bg-neutral-800 text-gray-500">
       {error && (
-        <div className="bg-neutral-800 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="bg-neutral-800 border border-red-200 text-red-400 px-4 py-3 rounded">
           {error}
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-500 mb-1">
           Type
         </label>
         <select
           name="type"
           value={formData.type}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 bg-neutral-800 text-gray-500"
         >
           <option value="income">Income</option>
           <option value="expense">Expense</option>
@@ -140,7 +140,7 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-500 mb-1">
           Amount *
         </label>
         <input
@@ -151,13 +151,13 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
           value={formData.amount}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 bg-neutral-800 text-gray-500 placeholder-gray-600"
           placeholder="0.00"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-500 mb-1">
           Category *
         </label>
         <select
@@ -165,7 +165,7 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
           value={formData.category}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 bg-neutral-800 text-gray-500"
         >
           <option value="">Select category</option>
           {categories.map((cat) => (
@@ -177,7 +177,7 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-500 mb-1">
           Description
         </label>
         <input
@@ -185,13 +185,13 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
           name="description"
           value={formData.description}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 bg-neutral-800 text-gray-500 placeholder-gray-600"
           placeholder="Transaction description"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-500 mb-1">
           Date
         </label>
         <input
@@ -199,12 +199,12 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
           name="date"
           value={formData.date}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 bg-neutral-800 text-gray-500"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-500 mb-1">
           Receipt Image
         </label>
         <div className="space-y-2">
@@ -218,7 +218,8 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
           <div className="flex space-x-2">
             <Button
               type="button"
-              variant="secondary"
+              variant="primary"
+              className='bg-neutral-700'
               onClick={() => fileInputRef.current?.click()}
             >
               Upload Receipt
@@ -238,7 +239,7 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
             <img
               src={receiptPreview}
               alt="Receipt preview"
-              className="mt-2 max-w-xs rounded border"
+              className="mt-2 max-w-xs rounded border border-gray-600"
             />
           )}
         </div>
@@ -250,23 +251,23 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
           name="isRecurring"
           checked={formData.isRecurring}
           onChange={handleChange}
-          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-neutral-800"
         />
-        <label className="ml-2 block text-sm text-gray-700">
+        <label className="ml-2 block text-sm text-gray-500">
           Recurring transaction
         </label>
       </div>
 
       {formData.isRecurring && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-500 mb-1">
             Frequency
           </label>
           <select
             name="recurringFrequency"
             value={formData.recurringFrequency}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-neutral-800 text-gray-500"
           >
             <option value="">Select frequency</option>
             <option value="daily">Daily</option>
@@ -277,10 +278,10 @@ const TransactionForm = ({ transaction, onClose, onSuccess }) => {
       )}
 
       <div className="flex justify-end space-x-2 pt-4">
-        <Button type="button" variant="secondary" onClick={onClose}>
+        <Button type="button" variant="primary" onClick={onClose} className='bg-neutral-700'>
           Cancel
         </Button>
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" disabled={loading} variant='primary' className='bg-neutral-700'>
           {loading ? 'Saving...' : transaction ? 'Update' : 'Create'}
         </Button>
       </div>

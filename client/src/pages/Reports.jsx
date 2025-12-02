@@ -125,25 +125,25 @@ const Reports = () => {
 
             {/* Summary */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg p-4 border border-green-100 dark:border-green-800/50">
+              <div className="dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg p-4 border border-green-100 dark:border-green-800/50">
                 <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Income</div>
                 <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                   ₹{report.summary?.totalIncome?.toFixed(2) || '0.00'}
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-lg p-4 border border-red-100 dark:border-red-800/50">
+              <div className="dark:from-red-900/20 dark:to-rose-900/20 rounded-lg p-4 border border-red-100 dark:border-red-800/50">
                 <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Expenses</div>
                 <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                   ₹{report.summary?.totalExpenses?.toFixed(2) || '0.00'}
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-900/30 dark:to-black/30 rounded-lg p-4 border border-blue-100 dark:border-gray-700">
+              <div className="dark:from-gray-900/30 dark:to-black/30 rounded-lg p-4 border border-blue-100 dark:border-gray-700">
                 <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Balance</div>
                 <div className={`text-2xl font-bold ${(report.summary?.balance || 0) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                   ₹{report.summary?.balance?.toFixed(2) || '0.00'}
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4 border border-purple-100 dark:border-purple-800/50">
+              <div className="dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4 border border-purple-100 dark:border-purple-800/50">
                 <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Savings Rate</div>
                 <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                   {report.summary?.savingsRate?.toFixed(1) || '0.0'}%
