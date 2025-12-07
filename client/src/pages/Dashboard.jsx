@@ -56,7 +56,7 @@ const Dashboard = () => {
     // Trend data (last 7 days)
     const today = new Date();
     const trendMap = {};
-    
+
     for (let i = 6; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
@@ -85,11 +85,14 @@ const Dashboard = () => {
     setTrendData(trendChartData);
   };
 
-  // Load data only on initial mount if transactions are empty
+  // Load data only on initial mount if transactions are empty or limit is too small
   useEffect(() => {
-    if (!hasLoadedRef.current && transactions.length === 0) {
+    if (!hasLoadedRef.current) {
       hasLoadedRef.current = true;
-      fetchTransactions({ limit: 100 });
+      // Fetch if no transactions OR if we have fewer than 100 items (likely from Transactions page)
+      if (transactions.length === 0 || transactions.length < 100) {
+        fetchTransactions({ limit: 100 });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -141,7 +144,7 @@ const Dashboard = () => {
               ₹{stats.totalIncome.toFixed(2)}
             </div>
           </div>
-          
+
           <div className="dark:from-red-900/20 dark:to-rose-900/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-red-100 dark:border-red-800/50 animate-slide-up" style={{ animationDelay: '0.1s' }}>
             <div className="flex items-center justify-between mb-4">
               <div className="text-sm font-semibold text-red-700 dark:text-red-400 uppercase tracking-wide">Total Expenses</div>
@@ -155,37 +158,32 @@ const Dashboard = () => {
               ₹{stats.totalExpenses.toFixed(2)}
             </div>
           </div>
-          
-          <div className={`rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border animate-slide-up ${
-            stats.balance >= 0 
-              ? 'from-blue-50 to-cyan-50 dark:from-gray-900/30 dark:to-black/30 border-blue-100 dark:border-gray-700' 
+
+          <div className={`rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border animate-slide-up ${stats.balance >= 0
+              ? 'from-blue-50 to-cyan-50 dark:from-gray-900/30 dark:to-black/30 border-blue-100 dark:border-gray-700'
               : 'from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-100 dark:border-orange-800/50'
-          }`} style={{ animationDelay: '0.2s' }}>
+            }`} style={{ animationDelay: '0.2s' }}>
             <div className="flex items-center justify-between mb-4">
-              <div className={`text-sm font-semibold uppercase tracking-wide ${
-                stats.balance >= 0 
-                  ? 'text-blue-700 dark:text-white' 
+              <div className={`text-sm font-semibold uppercase tracking-wide ${stats.balance >= 0
+                  ? 'text-blue-700 dark:text-white'
                   : 'text-orange-700 dark:text-orange-400'
-              }`}>Balance</div>
-              <div className={`p-2 rounded-lg ${
-                stats.balance >= 0 
-                  ? 'bg-blue-100 dark:bg-gray-800' 
+                }`}>Balance</div>
+              <div className={`p-2 rounded-lg ${stats.balance >= 0
+                  ? 'bg-blue-100 dark:bg-gray-800'
                   : 'bg-orange-100 dark:bg-orange-900/50'
-              }`}>
-                <svg className={`w-5 h-5 ${
-                  stats.balance >= 0 
-                    ? 'text-blue-600 dark:text-white' 
+                }`}>
+                <svg className={`w-5 h-5 ${stats.balance >= 0
+                    ? 'text-blue-600 dark:text-white'
                     : 'text-orange-600 dark:text-orange-400'
-                }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
             </div>
-            <div className={`text-3xl font-bold ${
-              stats.balance >= 0 
-                ? 'text-blue-700 dark:text-white' 
+            <div className={`text-3xl font-bold ${stats.balance >= 0
+                ? 'text-blue-700 dark:text-white'
                 : 'text-orange-700 dark:text-orange-400'
-            }`}>
+              }`}>
               ₹{stats.balance.toFixed(2)}
             </div>
           </div>
@@ -307,11 +305,10 @@ const Dashboard = () => {
                         </span>
                       </td>
                       <td
-                        className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${
-                          transaction.type === 'income' 
-                            ? 'text-green-600 dark:text-green-400' 
+                        className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${transaction.type === 'income'
+                            ? 'text-green-600 dark:text-green-400'
                             : 'text-red-600 dark:text-red-400'
-                        }`}
+                          }`}
                       >
                         {transaction.type === 'income' ? '+' : '-'}₹{transaction.amount.toFixed(2)}
                       </td>

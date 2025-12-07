@@ -25,6 +25,7 @@ const Transactions = () => {
   const [sortOrder, setSortOrder] = useState('desc');
   const prevFiltersRef = useRef(JSON.stringify(filters));
   const prevPageRef = useRef(pagination.page);
+  const prevLimitRef = useRef(pagination.limit);
   const hasMountedRef = useRef(false);
 
   const categories = [
@@ -52,27 +53,30 @@ const Transactions = () => {
   useEffect(() => {
     const filtersChanged = prevFiltersRef.current !== JSON.stringify(filters);
     const pageChanged = prevPageRef.current !== pagination.page;
+    const limitChanged = prevLimitRef.current !== pagination.limit;
     
-    // On first mount: only fetch if transactions are empty
+    // On first mount: only fetch if transactions are empty OR if limit is wrong
     if (!hasMountedRef.current) {
       hasMountedRef.current = true;
       prevFiltersRef.current = JSON.stringify(filters);
       prevPageRef.current = pagination.page;
+      prevLimitRef.current = pagination.limit;
       
-      if (transactions.length === 0) {
+      if (transactions.length === 0 || pagination.limit !== 10) {
         fetchTransactions({ limit: 10 });
       }
       return;
     }
 
-    // After first mount: only fetch if filters or page actually changed
-    if (filtersChanged || pageChanged) {
+    // After first mount: only fetch if filters, page, or limit actually changed
+    if (filtersChanged || pageChanged || limitChanged) {
       prevFiltersRef.current = JSON.stringify(filters);
       prevPageRef.current = pagination.page;
+      prevLimitRef.current = pagination.limit;
       fetchTransactions({ limit: 10 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, pagination.page]);
+  }, [filters, pagination.page, pagination.limit]);
 
   const handlePageChange = (newPage) => {
     if (!pagination.pages) return;
