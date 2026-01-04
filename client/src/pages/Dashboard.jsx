@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { useTransactions } from '../context/TransactionContext';
 import Button from '../components/Button';
 import Layout from '../components/Layout';
@@ -20,7 +20,8 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const hasLoadedRef = useRef(false);
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
+  // Custom refined color palette
+  const COLORS = ['#8b5cf6', '#ec4899', '#3b82f6', '#14b8a6', '#f59e0b', '#ef4444', '#6366f1', '#10b981'];
 
   // Calculate dashboard data from transactions
   const calculateDashboardData = (trans) => {
@@ -111,17 +112,33 @@ const Dashboard = () => {
 
   const recentTransactions = transactions.slice(0, 5);
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-surface border border-white/10 p-4 rounded-xl shadow-xl backdrop-blur-md">
+          <p className="font-medium text-gray-200 mb-2">{label}</p>
+          {payload.map((entry, index) => (
+            <p key={index} style={{ color: entry.color }} className="text-sm font-medium">
+              {entry.name === 'value' ? 'Amount' : entry.name}: ₹{entry.value.toFixed(2)}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <Layout>
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-8 animate-slide-up">
+      <div className="space-y-8">
+        <div className="flex justify-between items-center animate-slide-up">
           <div>
-            <h1 className="text-4xl font-bold from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold font-display text-white mb-2">
               Dashboard
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Welcome back! Here's your financial overview</p>
+            <p className="text-gray-400">Welcome back! Here's your financial overview</p>
           </div>
-          <Button onClick={() => setIsModalOpen(true)} className="shadow-lg hover:shadow-xl transition-shadow bg-neutral-700 border-white-500">
+          <Button onClick={() => setIsModalOpen(true)} variant="primary" className="shadow-lg shadow-primary-500/20">
             <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
@@ -130,125 +147,177 @@ const Dashboard = () => {
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className=" dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-green-100 dark:border-green-800/50 animate-slide-up">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="glass-card rounded-2xl p-6 hover:-translate-y-1 transition-transform duration-300 animate-slide-up" style={{ animationDelay: '0.1s' }}>
             <div className="flex items-center justify-between mb-4">
-              <div className="text-sm font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">Total Income</div>
-              <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
-                <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Total Income</h3>
+              <div className="p-2.5 bg-emerald-500/10 rounded-xl">
+                <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
-            <div className="text-3xl font-bold text-green-700 dark:text-green-400">
+            <div className="text-3xl font-bold text-white mb-1">
               ₹{stats.totalIncome.toFixed(2)}
+            </div>
+            <div className="text-xs text-emerald-400 font-medium flex items-center">
+              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              +12.5% from last month
             </div>
           </div>
 
-          <div className="dark:from-red-900/20 dark:to-rose-900/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-red-100 dark:border-red-800/50 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <div className="glass-card rounded-2xl p-6 hover:-translate-y-1 transition-transform duration-300 animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <div className="flex items-center justify-between mb-4">
-              <div className="text-sm font-semibold text-red-700 dark:text-red-400 uppercase tracking-wide">Total Expenses</div>
-              <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg">
-                <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Total Expenses</h3>
+              <div className="p-2.5 bg-rose-500/10 rounded-xl">
+                <svg className="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
             </div>
-            <div className="text-3xl font-bold text-red-700 dark:text-red-400">
+            <div className="text-3xl font-bold text-white mb-1">
               ₹{stats.totalExpenses.toFixed(2)}
+            </div>
+            <div className="text-xs text-rose-400 font-medium flex items-center">
+              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+              </svg>
+              +4.3% from last month
             </div>
           </div>
 
-          <div className={`rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border animate-slide-up ${stats.balance >= 0
-              ? 'from-blue-50 to-cyan-50 dark:from-gray-900/30 dark:to-black/30 border-blue-100 dark:border-gray-700'
-              : 'from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-100 dark:border-orange-800/50'
-            }`} style={{ animationDelay: '0.2s' }}>
+          <div className="glass-card rounded-2xl p-6 hover:-translate-y-1 transition-transform duration-300 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <div className="flex items-center justify-between mb-4">
-              <div className={`text-sm font-semibold uppercase tracking-wide ${stats.balance >= 0
-                  ? 'text-blue-700 dark:text-white'
-                  : 'text-orange-700 dark:text-orange-400'
-                }`}>Balance</div>
-              <div className={`p-2 rounded-lg ${stats.balance >= 0
-                  ? 'bg-blue-100 dark:bg-gray-800'
-                  : 'bg-orange-100 dark:bg-orange-900/50'
-                }`}>
-                <svg className={`w-5 h-5 ${stats.balance >= 0
-                    ? 'text-blue-600 dark:text-white'
-                    : 'text-orange-600 dark:text-orange-400'
-                  }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Total Balance</h3>
+              <div className="p-2.5 bg-primary-500/10 rounded-xl">
+                <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
             </div>
-            <div className={`text-3xl font-bold ${stats.balance >= 0
-                ? 'text-blue-700 dark:text-white'
-                : 'text-orange-700 dark:text-orange-400'
-              }`}>
+            <div className={`text-3xl font-bold mb-1 ${stats.balance >= 0 ? 'text-white' : 'text-orange-400'}`}>
               ₹{stats.balance.toFixed(2)}
+            </div>
+            <div className="text-xs text-primary-400 font-medium flex items-center">
+              Net balance available
             </div>
           </div>
         </div>
 
         {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Category Pie Chart */}
-          <div className="bg-neutral-800  rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white flex items-center">
-              <svg className="w-5 h-5 mr-2 text-blue-600 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H11V2.512A9.025 9.025 0 0120.488 9z" />
-              </svg>
-              Expense Categories
+          <div className="glass-card rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+            <h2 className="text-lg font-semibold mb-6 text-white flex items-center">
+              <div className="w-2 h-6 bg-primary-500 rounded-full mr-3" />
+              Expense Breakdown
             </h2>
             {categoryData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={categoryData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {categoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={categoryData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      iconType="circle"
+                      formatter={(value) => <span className="text-gray-400 text-sm ml-1">{value}</span>}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             ) : (
-              <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+              <div className="h-[300px] flex flex-col items-center justify-center text-gray-500 border-2 border-dashed border-white/5 rounded-xl">
+                <svg className="w-12 h-12 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                </svg>
                 No expense data available
               </div>
             )}
           </div>
 
           {/* Trend Line Chart */}
-          <div className="bg-neutral-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white flex items-center">
-              <svg className="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-              </svg>
-              Income vs Expenses (Last 7 Days)
+          <div className="glass-card rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.5s' }}>
+            <h2 className="text-lg font-semibold mb-6 text-white flex items-center">
+              <div className="w-2 h-6 bg-secondary-500 rounded-full mr-3" />
+              Cash Flow Trend
             </h2>
             {trendData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={trendData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="income" stroke="#00C49F" strokeWidth={2} />
-                  <Line type="monotone" dataKey="expenses" stroke="#FF8042" strokeWidth={2} />
-                </LineChart>
-              </ResponsiveContainer>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={trendData}>
+                    <defs>
+                      <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                    <XAxis
+                      dataKey="date"
+                      stroke="#6b7280"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      stroke="#6b7280"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(value) => `₹${value}`}
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend
+                      verticalAlign="top"
+                      align="right"
+                      iconType="circle"
+                      wrapperStyle={{ paddingBottom: '20px' }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="income"
+                      stroke="#10b981"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#colorIncome)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="expenses"
+                      stroke="#ef4444"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#colorExpenses)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
             ) : (
-              <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+              <div className="h-[300px] flex flex-col items-center justify-center text-gray-500 border-2 border-dashed border-white/5 rounded-xl">
+                <svg className="w-12 h-12 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                </svg>
                 No trend data available
               </div>
             )}
@@ -256,15 +325,15 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Transactions */}
-        <div className="bg-neutral-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
-              <svg className="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="glass-card rounded-2xl overflow-hidden animate-slide-up" style={{ animationDelay: '0.6s' }}>
+          <div className="px-6 py-5 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+            <h2 className="text-lg font-semibold text-white flex items-center">
+              <svg className="w-5 h-5 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               Recent Transactions
             </h2>
-            <Link to="/transactions" className="text-blue-600 dark:text-white hover:text-blue-700 dark:hover:text-gray-300 text-sm font-medium flex items-center transition-colors">
+            <Link to="/transactions" className="text-sm font-medium text-primary-400 hover:text-primary-300 transition-colors flex items-center">
               View all
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -272,42 +341,42 @@ const Dashboard = () => {
             </Link>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-neutral-700">
+            <table className="min-w-full divide-y divide-gray-800">
+              <thead className="bg-[#111111]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     Description
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     Category
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     Amount
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-neutral-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-white/5">
                 {recentTransactions.length > 0 ? (
-                  recentTransactions.map((transaction, index) => (
-                    <tr key={transaction._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                  recentTransactions.map((transaction) => (
+                    <tr key={transaction._id} className="hover:bg-white/[0.02] transition-colors duration-150">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                         {format(new Date(transaction.date), 'MMM dd, yyyy')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
                         {transaction.description || '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-neutral-700  text-blue-800 dark:text-white">
+                        <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-white/5 text-gray-300 border border-white/10">
                           {transaction.category}
                         </span>
                       </td>
                       <td
-                        className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${transaction.type === 'income'
-                            ? 'text-green-600 dark:text-green-400'
-                            : 'text-red-600 dark:text-red-400'
+                        className={`px-6 py-4 whitespace-nowrap text-sm font-bold ${transaction.type === 'income'
+                          ? 'text-emerald-400'
+                          : 'text-rose-400'
                           }`}
                       >
                         {transaction.type === 'income' ? '+' : '-'}₹{transaction.amount.toFixed(2)}
@@ -316,9 +385,9 @@ const Dashboard = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                    <td colSpan="4" className="px-6 py-12 text-center text-sm text-gray-500">
                       <div className="flex flex-col items-center">
-                        <svg className="w-12 h-12 text-gray-400 dark:text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-12 h-12 text-gray-600 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
                         <p>No transactions yet. Add your first transaction!</p>

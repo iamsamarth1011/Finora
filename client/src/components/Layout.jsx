@@ -12,71 +12,61 @@ const Layout = ({ children }) => {
     logout();
   };
 
+  // Helper to determine if a path is active
   const isActive = (path) => location.pathname === path;
 
+  // Link classes generator
+  const getLinkClasses = (path) => {
+    const active = isActive(path);
+    return `relative px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-lg group ${active
+        ? 'text-white bg-white/10'
+        : 'text-gray-400 hover:text-white hover:bg-white/5'
+      }`;
+  };
+
   return (
-    <div className="min-h-screen bg-neutral-900 from-gray-950 via-gray-900 to-gray-900 text-white transition-colors duration-300 flex flex-col">
+    <div className="min-h-screen bg-background text-gray-100 flex flex-col font-sans selection:bg-primary-500/30">
       {/* Navigation */}
-      <nav className="bg-neutral-900 backdrop-blur-lg shadow-lg border-b border-gray-800 sticky top-0 z-50 transition-colors duration-300">
+      <nav className="fixed top-0 w-full z-50 glass border-b-0 border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <Link to="/dashboard" className="flex-shrink-0 flex items-center space-x-3 group">
-                <img 
-                  src={blackLogo} 
-                  alt="Finora" 
-                  className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-200 drop-shadow-lg"
-                />
-                <span className="text-2xl font-bold text-white tracking-wide">
+          <div className="flex justify-between h-20 items-center">
+            <div className="flex items-center gap-12">
+              <Link to="/dashboard" className="flex items-center gap-3 group">
+                <div className="relative">
+                  <div className="absolute -inset-2 bg-primary-500/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <img
+                    src={blackLogo}
+                    alt="Finora"
+                    className="relative w-10 h-10 object-contain drop-shadow-2xl"
+                  />
+                </div>
+                <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 font-display tracking-tight">
                   Finora
                 </span>
               </Link>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <Link
-                  to="/dashboard"
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
-                    isActive('/dashboard')
-                      ? 'border-blue-500 dark:border-gray-700 text-blue-600 dark:text-white'
-                      : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
-                >
+
+              <div className="hidden md:flex items-center gap-2">
+                <Link to="/dashboard" className={getLinkClasses('/dashboard')}>
                   Dashboard
                 </Link>
-                <Link
-                  to="/transactions"
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
-                    isActive('/transactions')
-                      ? 'border-blue-500 dark:border-gray-700 text-blue-600 dark:text-white'
-                      : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
-                >
+                <Link to="/transactions" className={getLinkClasses('/transactions')}>
                   Transactions
                 </Link>
-                <Link
-                  to="/reports"
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
-                    isActive('/reports')
-                      ? 'border-blue-500 dark:border-gray-700 text-blue-600 dark:text-white'
-                      : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
-                >
+                <Link to="/reports" className={getLinkClasses('/reports')}>
                   Reports
                 </Link>
-                <Link
-                  to="/profile"
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
-                    isActive('/profile')
-                      ? 'border-blue-500 dark:border-gray-700 text-blue-600 dark:text-white'
-                      : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
-                >
+                <Link to="/profile" className={getLinkClasses('/profile')}>
                   Profile
                 </Link>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-300 font-medium hidden sm:block">{user?.name}</span>
-              <Button variant="outline" onClick={handleLogout}>
+
+            <div className="flex items-center gap-6">
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-sm font-medium text-white">{user?.name}</span>
+                <span className="text-xs text-gray-500">Free Plan</span>
+              </div>
+              <Button variant="outline" onClick={handleLogout} className="!px-4 !py-2 text-sm">
                 Logout
               </Button>
             </div>
@@ -85,8 +75,10 @@ const Layout = ({ children }) => {
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 animate-fade-in flex-1">
-        {children}
+      <main className="flex-1 pt-24 pb-12 animate-fade-in">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {children}
+        </div>
       </main>
 
       {/* Footer */}
